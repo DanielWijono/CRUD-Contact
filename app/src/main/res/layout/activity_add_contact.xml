@@ -6,50 +6,69 @@
     android:orientation="vertical"
     tools:context=".activity.AddContactActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="16dp">
+        android:layout_height="wrap_content">
 
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="First Name"
-            android:singleLine="true"
-            android:id="@+id/et_first_name"/>
+            android:orientation="vertical"
+            android:layout_margin="16dp">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Last Name"
-            android:singleLine="true"
-            android:id="@+id/et_last_name"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="First Name"
+                android:singleLine="true"
+                android:id="@+id/et_first_name"/>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Age"
-            android:singleLine="true"
-            android:inputType="number"
-            android:maxLength="3"
-            android:id="@+id/et_age"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Last Name"
+                android:singleLine="true"
+                android:id="@+id/et_last_name"/>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Photo Url"
-            android:singleLine="true"
-            android:id="@+id/et_photo_url"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Age"
+                android:singleLine="true"
+                android:inputType="number"
+                android:maxLength="3"
+                android:id="@+id/et_age"/>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add Contact"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:id="@+id/btn_add_contact"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Photo Url"
+                android:singleLine="true"
+                android:id="@+id/et_photo_url"/>
 
-    </LinearLayout>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Contact"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:id="@+id/btn_add_contact"/>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Edit Contact"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:id="@+id/btn_edit_contact"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Delete Contact"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
+                android:id="@+id/btn_delete_contact"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

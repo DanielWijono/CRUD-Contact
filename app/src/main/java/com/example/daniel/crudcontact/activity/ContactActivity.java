@@ -1,8 +1,11 @@
 package com.example.daniel.crudcontact.activity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -77,7 +80,13 @@ public class ContactActivity extends AppCompatActivity implements RecyclerViewIn
 
     @Override
     public void onRecyclerViewClicked(int position) {
-        Toast.makeText(this, contactDataList.get(position).getId(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, AddContactActivity.class);
+        intent.putExtra("id", contactDataList.get(position).getId());
+        intent.putExtra("firstname", contactDataList.get(position).getFirstName());
+        intent.putExtra("lastname", contactDataList.get(position).getLastName());
+        intent.putExtra("age", contactDataList.get(position).getAge());
+        intent.putExtra("photourl", contactDataList.get(position).getPhoto());
+        startActivity(intent);
     }
 
     @OnClick(R.id.fab)

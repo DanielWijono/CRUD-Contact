@@ -1,9 +1,12 @@
 package com.example.daniel.crudcontact.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -32,6 +35,10 @@ public class AddContactActivity extends AppCompatActivity {
     EditText etPhotoUrl;
     @BindView(R.id.btn_add_contact)
     Button btnAddContact;
+    @BindView(R.id.btn_edit_contact)
+    Button btnEditContact;
+    @BindView(R.id.btn_delete_contact)
+    Button btnDeleteContact;
 
     TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -51,16 +58,86 @@ public class AddContactActivity extends AppCompatActivity {
     };
 
     ConnectionManagerPresenter connectionManagerPresenter;
+    Bundle bundle;
+    String id, firstName, lastName, photoUrl;
+    int age = 909090;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
         ButterKnife.bind(this);
+
         etFirstName.addTextChangedListener(textWatcher);
         etLastName.addTextChangedListener(textWatcher);
         etAge.addTextChangedListener(textWatcher);
         etPhotoUrl.addTextChangedListener(textWatcher);
+
+        btnAddContact.setVisibility(View.VISIBLE);
+        btnDeleteContact.setVisibility(View.GONE);
+        btnEditContact.setVisibility(View.GONE);
+
+        bundle = getIntent().getExtras();
+        if (bundle != null) {
+            id = bundle.getString("id");
+            firstName = bundle.getString("firstname");
+            lastName = bundle.getString("lastname");
+            age = bundle.getInt("age");
+            photoUrl = bundle.getString("photourl");
+        }
+        setViewBundleExist();
+    }
+
+    private void setViewBundleExist() {
+        if (id != null && firstName != null && lastName != null && age != 909090 && photoUrl != null) {
+            etFirstName.setText(firstName);
+            etLastName.setText(lastName);
+            etAge.setText(String.valueOf(age));
+            etPhotoUrl.setText(photoUrl);
+
+            btnAddContact.setVisibility(View.GONE);
+            btnDeleteContact.setVisibility(View.VISIBLE);
+            btnEditContact.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void deletePopUpDialog() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure want to delete this contact ? ")
+                .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        deleteContactAPI();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
+
+    private void deleteContactAPI() {
+        System.out.println("contact list id : "+id);
+        Call call = RetrofitService.retrofitRequest().deleteContact(id);
+        connectionManagerPresenter = new ConnectionManagerPresenter();
+        connectionManagerPresenter.connect(call, new ConnectionCallbackPresenter() {
+            @Override
+            public void onSuccessResponse(Call call, Response response) {
+                Toast.makeText(AddContactActivity.this, "SUKSES DELETE", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+            @Override
+            public void onFailedResponse(Call call, Response response) {
+                Toast.makeText(AddContactActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call call, String message) {
+                Toast.makeText(AddContactActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void addContactAPI() {
@@ -85,13 +162,22 @@ public class AddContactActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick(R.id.btn_add_contact)
-    public void onViewClicked() {
-        if (etFirstName.length() > 0 && etLastName.length() > 0 && etAge.length() > 0 && etPhotoUrl.length() > 0) {
-            addContactAPI();
-        } else {
-            Toast.makeText(this, "data yang anda isi belum lengkap", Toast.LENGTH_SHORT).show();
-        }
+    @OnClick({R.id.btn_add_contact, R.id.btn_edit_contact, R.id.btn_delete_contact})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_add_contact:
+                if (etFirstName.length() > 0 && etLastName.length() > 0 && etAge.length() > 0 && etPhotoUrl.length() > 0) {
+                    addContactAPI();
+                } else {
+                    Toast.makeText(this, "data yang anda isi belum lengkap", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.btn_edit_contact:
 
+                break;
+            case R.id.btn_delete_contact:
+                deletePopUpDialog();
+                break;
+        }
     }
 }
