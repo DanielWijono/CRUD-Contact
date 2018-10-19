@@ -118,7 +118,6 @@ public class AddContactActivity extends AppCompatActivity {
     }
 
     private void deleteContactAPI() {
-        System.out.println("contact list id : "+id);
         Call call = RetrofitService.retrofitRequest().deleteContact(id);
         connectionManagerPresenter = new ConnectionManagerPresenter();
         connectionManagerPresenter.connect(call, new ConnectionCallbackPresenter() {
@@ -152,12 +151,34 @@ public class AddContactActivity extends AppCompatActivity {
 
             @Override
             public void onFailedResponse(Call call, Response response) {
-                Toast.makeText(AddContactActivity.this, "FAILED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddContactActivity.this, response.message(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call call, String message) {
-                Toast.makeText(AddContactActivity.this, "FAILURE", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddContactActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void editContactAPI() {
+        Call call = RetrofitService.retrofitRequest().editContact(id, APIBody.addContact(etFirstName.getText().toString(), etLastName.getText().toString(),
+                Integer.valueOf(etAge.getText().toString()), etPhotoUrl.getText().toString()));
+        connectionManagerPresenter = new ConnectionManagerPresenter();
+        connectionManagerPresenter.connect(call, new ConnectionCallbackPresenter() {
+            @Override
+            public void onSuccessResponse(Call call, Response response) {
+                finish();
+            }
+
+            @Override
+            public void onFailedResponse(Call call, Response response) {
+                Toast.makeText(AddContactActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call call, String message) {
+                Toast.makeText(AddContactActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -173,7 +194,7 @@ public class AddContactActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.btn_edit_contact:
-
+                editContactAPI();
                 break;
             case R.id.btn_delete_contact:
                 deletePopUpDialog();

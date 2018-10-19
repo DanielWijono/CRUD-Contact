@@ -12,6 +12,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface APICollections {
@@ -24,5 +25,11 @@ public interface APICollections {
 
     @DELETE("contact/{id}")
     Call<MainResponse> deleteContact(@Path(value = "id", encoded = true) String id);
+
+    @GET("contact/{id}")
+    Call<MainResponse> getContactBasedOnId(@Path(value = "id", encoded = true) String id);
+
+    @PUT("contact/{id}")
+    Call<MainResponse> editContact(@Path(value = "id", encoded = true) String id, @Body Map<String, Object> body);
 
 }
