@@ -14,7 +14,6 @@ public class ConnectionManagerPresenter {
 
     private ConnectionCallbackPresenter mConnectionCallback;
     private Call mCall;
-    private String message;
 
     public void connect( Call mCall,  ConnectionCallbackPresenter mConnectionCallback) {
         this.mCall = mCall;
@@ -32,8 +31,6 @@ public class ConnectionManagerPresenter {
 
                 if (response.isSuccessful()) { //ONLY FOR RESPONSE CODE 200
                     System.out.println("Response success");
-                    MainResponse mainResponse = (MainResponse) response.body();
-                    message = mainResponse.getMessage();
                     mConnectionCallback.onSuccessResponse(call, response);
                 } else {
                     mConnectionCallback.onFailedResponse(call, response);

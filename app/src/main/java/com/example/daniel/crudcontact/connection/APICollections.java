@@ -2,6 +2,7 @@ package com.example.daniel.crudcontact.connection;
 
 import com.example.daniel.crudcontact.Constants;
 import com.example.daniel.crudcontact.model.ContactData;
+import com.example.daniel.crudcontact.model.ContactDataId;
 import com.example.daniel.crudcontact.model.Contacts;
 import com.example.daniel.crudcontact.model.MainResponse;
 
@@ -27,7 +28,7 @@ public interface APICollections {
     Call<MainResponse> deleteContact(@Path(value = "id", encoded = true) String id);
 
     @GET("contact/{id}")
-    Call<MainResponse> getContactBasedOnId(@Path(value = "id", encoded = true) String id);
+    Call<ContactDataId> getContactBasedOnId(@Path(value = "id", encoded = true) String id);
 
     @PUT("contact/{id}")
     Call<MainResponse> editContact(@Path(value = "id", encoded = true) String id, @Body Map<String, Object> body);
