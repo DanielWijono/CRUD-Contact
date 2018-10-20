@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.daniel.crudcontact.R;
@@ -61,6 +62,8 @@ public class AddContactActivity extends AppCompatActivity {
     Bundle bundle;
     String id, firstName, lastName, photoUrl;
     int age = 909090;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,7 @@ public class AddContactActivity extends AppCompatActivity {
         btnAddContact.setVisibility(View.VISIBLE);
         btnDeleteContact.setVisibility(View.GONE);
         btnEditContact.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
 
         bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -118,66 +122,78 @@ public class AddContactActivity extends AppCompatActivity {
     }
 
     private void deleteContactAPI() {
+        progressBar.setVisibility(View.VISIBLE);
         Call call = RetrofitService.retrofitRequest().deleteContact(id);
         connectionManagerPresenter = new ConnectionManagerPresenter();
         connectionManagerPresenter.connect(call, new ConnectionCallbackPresenter() {
             @Override
             public void onSuccessResponse(Call call, Response response) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(AddContactActivity.this, "SUKSES DELETE", Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             @Override
             public void onFailedResponse(Call call, Response response) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(AddContactActivity.this, response.message(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call call, String message) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(AddContactActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void addContactAPI() {
+        progressBar.setVisibility(View.VISIBLE);
         Call call = RetrofitService.retrofitRequest().addContact(APIBody.addContact(etFirstName.getText().toString(), etLastName.getText().toString(),
                 Integer.valueOf(etAge.getText().toString()), etPhotoUrl.getText().toString()));
         connectionManagerPresenter = new ConnectionManagerPresenter();
         connectionManagerPresenter.connect(call, new ConnectionCallbackPresenter() {
             @Override
             public void onSuccessResponse(Call call, Response response) {
+                progressBar.setVisibility(View.GONE);
                 finish();
             }
 
             @Override
             public void onFailedResponse(Call call, Response response) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(AddContactActivity.this, response.message(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call call, String message) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(AddContactActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void editContactAPI() {
+        progressBar.setVisibility(View.VISIBLE);
         Call call = RetrofitService.retrofitRequest().editContact(id, APIBody.addContact(etFirstName.getText().toString(), etLastName.getText().toString(),
                 Integer.valueOf(etAge.getText().toString()), etPhotoUrl.getText().toString()));
         connectionManagerPresenter = new ConnectionManagerPresenter();
         connectionManagerPresenter.connect(call, new ConnectionCallbackPresenter() {
             @Override
             public void onSuccessResponse(Call call, Response response) {
+                progressBar.setVisibility(View.GONE);
                 finish();
             }
 
             @Override
             public void onFailedResponse(Call call, Response response) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(AddContactActivity.this, response.message(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call call, String message) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(AddContactActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +28,6 @@ import com.example.daniel.crudcontact.connection.RetrofitService;
 import com.example.daniel.crudcontact.model.ContactData;
 import com.example.daniel.crudcontact.model.ContactDataId;
 import com.example.daniel.crudcontact.model.Contacts;
-import com.example.daniel.crudcontact.model.MainResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +37,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class ContactActivity extends AppCompatActivity implements RecyclerViewInterface {
 
@@ -55,6 +54,10 @@ public class ContactActivity extends AppCompatActivity implements RecyclerViewIn
     Button btnSearch;
     @BindView(R.id.ll_search)
     LinearLayout llSearch;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+    @BindView(R.id.small_progressBar)
+    ProgressBar smallProgressBar;
 
     TextWatcher textWatcher = new TextWatcher() {
         @Override
@@ -79,6 +82,7 @@ public class ContactActivity extends AppCompatActivity implements RecyclerViewIn
         setContentView(R.layout.activity_contact);
         ButterKnife.bind(this);
         etSearch.addTextChangedListener(textWatcher);
+        smallProgressBar.setVisibility(View.GONE);
         getContactListAPI();
     }
 
@@ -90,11 +94,13 @@ public class ContactActivity extends AppCompatActivity implements RecyclerViewIn
     }
 
     private void getContactListAPI() {
+        progressBar.setVisibility(View.VISIBLE);
         Call call = RetrofitService.retrofitRequest().getContactDataList();
         connectionManagerPresenter = new ConnectionManagerPresenter();
         connectionManagerPresenter.connect(call, new ConnectionCallbackPresenter() {
             @Override
             public void onSuccessResponse(Call call, Response response) {
+                progressBar.setVisibility(View.GONE);
                 Contacts contacts = (Contacts) response.body();
                 contactDataList = contacts.getContactDataList();
                 initRecyclerView();
@@ -102,33 +108,39 @@ public class ContactActivity extends AppCompatActivity implements RecyclerViewIn
 
             @Override
             public void onFailedResponse(Call call, Response response) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(ContactActivity.this, "FAILED", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call call, String message) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(ContactActivity.this, "FAILURE", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void searchContactIdAPI() {
+        smallProgressBar.setVisibility(View.VISIBLE);
         Call call = RetrofitService.retrofitRequest().getContactBasedOnId(etSearch.getText().toString());
         connectionManagerPresenter = new ConnectionManagerPresenter();
         connectionManagerPresenter.connect(call, new ConnectionCallbackPresenter() {
             @Override
             public void onSuccessResponse(Call call, Response response) {
+                smallProgressBar.setVisibility(View.GONE);
                 ContactDataId contactDataId = (ContactDataId) response.body();
                 popUpContactInfo(contactDataId);
             }
 
             @Override
             public void onFailedResponse(Call call, Response response) {
+                smallProgressBar.setVisibility(View.GONE);
                 Toast.makeText(ContactActivity.this, response.message(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onFailure(Call call, String message) {
+                smallProgressBar.setVisibility(View.GONE);
                 Toast.makeText(ContactActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
